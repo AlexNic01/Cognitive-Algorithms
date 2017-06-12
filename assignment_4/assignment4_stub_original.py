@@ -29,9 +29,6 @@ def train_ols(X_train, Y_train, llambda = 0):
                              with sp.dot(W.T, X)                      
     '''
     #your code here
-    XXT = X_train.dot(X_train.T)
-    XXTX = inv(XXT + llambda * sp.identity(len(X_train.T[0]))).dot(X_train)
-    return XXTX.dot(Y_train.T)
     
 def apply_ols(W, X_test):
     ''' Applys ordinary least squares (ols) regression 
@@ -41,7 +38,6 @@ def apply_ols(W, X_test):
     Output:     Y_test    -  D2xN array
     '''
     #your code here
-    return W.T.dot(X_test)
     
 def predict_handposition():
     X_train,Y_train,X_test, Y_test = load_myo_data('myo_data.mat')
@@ -108,49 +104,3 @@ def test_assignment4():
     pl.xlabel('x')
     pl.ylabel('y')
     pl.legend(loc = 'lower right')
-
-def train_lin_reg(grade, llambda, train_Y):
-    train_X = sp.stack([sp.arange(11) ** i for i in range(grade)])
-    #d_toy = sp.vstack([train_X, d_toy]) 
-    W = train_ols(train_X, train_Y, llambda)
-    test_X = sp.stack([sp.arange(-0.5,11.5,0.1) ** i for i in range(grade)])
-    Y = apply_ols(W, test_X)
-    return test_X[1],Y
-
-def test_polynomial_regression_3():
-    d_toy = sp.sin(sp.arange(11)) + sp.random.normal(0, 0.5, 11)
-    
-    #Apply and visualize polynomial ridge regression for different parameters:
-    #a) m = 1, 4, 9 with λ = 0
-    pl.figure(figsize=(20,10))
-    pl.subplot(2,2,1)
-    pl.plot(sp.arange(11), d_toy, 'k+', label='Training Data', mew=2.0, ms=8.0)
-    X, Y = train_lin_reg(2,0,d_toy)
-    pl.plot(X, Y.T, 'g-.', label = 'm=1')
-    
-    X, Y = train_lin_reg(5,0,d_toy)
-    pl.plot(X, Y.T, 'b-' , label = 'm=4')
-    
-    X, Y = train_lin_reg(10,0,d_toy)
-    pl.plot(X, Y.T, 'r--', label = 'm=9')
-    
-    pl.title('Polynomial regression for different degrees m')
-    pl.axis([-1, 11, -3, 3])
-    pl.legend(loc = 3)
-    ############################################# 
-    #b) λ = 0, 1, 10000 with m = 9
-    pl.subplot(2,2,2)
-    pl.plot(sp.arange(11), d_toy, 'k+', label='Training Data', mew=2.0, ms=8.0)
-
-    X, Y = train_lin_reg(10,0,d_toy)
-    pl.plot(X, Y.T, 'r--', label = 'r=0')
-    
-    X, Y = train_lin_reg(10,1,d_toy)
-    pl.plot(X, Y.T, 'b-' , label = 'r=1')
-    
-    X, Y = train_lin_reg(10,10000,d_toy)
-    pl.plot(X, Y.T, 'g-.', label = 'r=10000')
-    
-    pl.title('Polynomial ridge regression (m=9)')
-    pl.axis([-1, 11, -3, 3])
-    pl.legend(loc = 3)
